@@ -3,37 +3,37 @@
 #include <time.h>
 
 //Posições da linha e coluna do jogo SAME
-struct Posicoes{
+typedef struct Posicoes{
     int linha;
     int coluna;
-};
+}Posicoes;
 
 //Fila para realocar a coluna do jogo SAME
-struct filaReloc{
+typedef struct filaReloc{
     int elem[25];
     int inicio;
     int fim;
     int tamMAX;
-};
+}filaReloc;
 
 //Inicializa fila de realocar
-void inicializaFilaReloc (struct filaReloc *q){
+void inicializaFilaReloc (filaReloc *q){
     q->inicio=-1;
     q->fim=-1;
 }
 
 //Verifica se a fila realocar está vazia
-int filaRelocVazia (struct filaReloc *q){
+int filaRelocVazia (filaReloc *q){
   return q->inicio==q->fim;
 }
 
 //Verifica se a fila realocar está cheia
-int filaRelocCheia (struct filaReloc *q){
+int filaRelocCheia (filaReloc *q){
     return q->fim==q->tamMAX;
 }
 
 //Desloca a fila realocar caso ela esteja cheia
-void descolaFilaReloc (struct filaReloc *q){
+void descolaFilaReloc (filaReloc *q){
     int desloc=q->inicio+1;
     for(int i=desloc;i<q->fim;i++){
         q->elem[i-desloc]=q->elem[i];
@@ -43,7 +43,7 @@ void descolaFilaReloc (struct filaReloc *q){
 }
 
 //Insere na fila realocar
-void insereFilaReloc (struct filaReloc *q, int x){
+void insereFilaReloc (filaReloc *q, int x){
     if(filaRelocCheia(q)){
         descolaFilaReloc(q);
     } else {
@@ -53,7 +53,7 @@ void insereFilaReloc (struct filaReloc *q, int x){
 }
 
 //Remove da fila realocar
-void removeFilaReloc (struct filaReloc *q){
+void removeFilaReloc (filaReloc *q){
     int x;
     if(!filaRelocVazia(q)){
         q->inicio=q->inicio+1;
@@ -65,38 +65,38 @@ void removeFilaReloc (struct filaReloc *q){
 };
 
 //Devolve a o primeiro da fila realocar
-int primeirodaFilaReloc (struct filaReloc *q){
+int primeirodaFilaReloc (filaReloc *q){
     if (!filaRelocVazia(q)){
         return q->elem[q->inicio+1];
     }
 };
 
 //Fila para a função busca do jogo SAME
-struct fila1{
+typedef struct fila1{
     struct Posicoes elem[25];
     int inicio;
     int fim;
     int tamMAX;
-};
+}fila1;
 
 //Inicializa a fila para a função busca
-void inicializaFila1 (struct fila1 *q){
+void inicializaFila1 (fila1 *q){
   q->inicio=-1;
   q->fim=-1;
 }
 
 //Verifica se a fila para a função busca está vazia
-int filaVazia1 (struct fila1 *q){
+int filaVazia1 (fila1 *q){
   return q->inicio==q->fim;
 }
 
 //Verifica se a fila para a função busca está cheia
-int filaCheia1 (struct fila1 *q){
+int filaCheia1 (fila1 *q){
     return q->fim==q->tamMAX;
 }
 
 //Desloca a fila para a função busca caso esteja cheia
-void descolaFila1 (struct fila1 *q){
+void descolaFila1 (fila1 *q){
     int desloc=q->inicio+1;
     for(int i=desloc;i<q->fim;i++){
         q->elem[i-desloc]=q->elem[i];
@@ -106,7 +106,7 @@ void descolaFila1 (struct fila1 *q){
 }
 
 //Insere na fila para a função busca
-void insereFila1 (struct fila1 *q, struct Posicoes *x){
+void insereFila1 (fila1 *q, Posicoes *x){
     if(filaCheia1(q)){
         descolaFila1(q);
     } else {
@@ -116,7 +116,7 @@ void insereFila1 (struct fila1 *q, struct Posicoes *x){
 }
 
 //Remove da fila para a função busca
-struct Posicoes removeFila1 (struct fila1 *q){
+struct Posicoes removeFila1 (fila1 *q){
     struct Posicoes x;
     if(!filaVazia1(q)){
         q->inicio=q->inicio+1;
@@ -129,7 +129,7 @@ struct Posicoes removeFila1 (struct fila1 *q){
 };
 
 //Retorna o primeiro da fila para a função busca
-struct Posicoes primeirodaFila1 (struct fila1 *q){
+struct Posicoes primeirodaFila1 (fila1 *q){
     if (!filaVazia1(q)){
         return q->elem[q->inicio+1];
     }
@@ -137,20 +137,14 @@ struct Posicoes primeirodaFila1 (struct fila1 *q){
 
 //Busca os números(cores) ao redor de sua posição
 int busca(int mSAME[12][16], int par, int linha, int coluna){
-    struct fila1 ke;
-    struct fila1 *q=&ke;
+    fila1 *q=(fila1*)malloc(sizeof(fila1));;
     q->tamMAX=12*16;
     inicializaFila1(q);
-    struct Posicoes p;
-    struct Posicoes c;
-    struct Posicoes b;
-    struct Posicoes e;
-    struct Posicoes d;
-    struct Posicoes *pri=&p;
-    struct Posicoes *cima=&c;
-    struct Posicoes *baixo=&b;
-    struct Posicoes *esq=&e;
-    struct Posicoes *dir=&d;
+    Posicoes *pri=(Posicoes*)malloc(sizeof(Posicoes));
+    Posicoes *cima=(Posicoes*)malloc(sizeof(Posicoes));
+    Posicoes *baixo=(Posicoes*)malloc(sizeof(Posicoes));
+    Posicoes *esq=(Posicoes*)malloc(sizeof(Posicoes));
+    Posicoes *dir=(Posicoes*)malloc(sizeof(Posicoes));
     pri->linha=linha;
     pri->coluna=coluna;
     insereFila1(q,pri);
@@ -207,9 +201,8 @@ int busca(int mSAME[12][16], int par, int linha, int coluna){
 }
 
 //Realoca a linha do jogo SAME para baixo
-void relocLinha (int mSAME[12][16]){
-    struct filaReloc ke;
-    struct filaReloc *q=&ke;
+void relocLinha (int mSAME[12][16]){ 
+    filaReloc *q=(filaReloc*)malloc(sizeof(filaReloc));
     q->tamMAX=12;
     int aux=11;
     inicializaFilaReloc(q);
